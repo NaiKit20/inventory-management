@@ -20,7 +20,9 @@ import { join } from 'path';
         password: process.env.DB_PASSWORD || 'inventory_management_password',
         database: process.env.DB_NAME || 'inventory_management_db',
         entities: [join(__dirname, '**', '*.entity{.ts,.js}')],
+        migrations: [join(__dirname, 'migrations/*{.ts,.js}')],
         synchronize: true,
+        migrationsRun: true,
         logging: false,
       }),
     }),
@@ -31,4 +33,4 @@ import { join } from 'path';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
