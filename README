@@ -1,0 +1,116 @@
+
+# Inventory Management — ขั้นตอนเริ่มต้น (Getting Started)
+
+## โครงสร้างโปรเจกต์นี้ประกอบด้วยสามส่วนหลัก:
+
+- `inventory-management-backend/` — NestJS backend (API)
+- `inventory-management-frontend/` — Vue 3 + Vite frontend (UI)
+- `docker-compose-database.yml` — database PostgreSQL
+
+## ข้อกำหนดเบื้องต้น
+
+- Node.js (แนะนำ >= 18)
+- npm (มาพร้อมกับ Node.js) หรือ yarn หากต้องการ
+- Docker + Docker Compose (หรือ Docker Desktop)
+
+หมายเหตุ: คำสั่งด้านล่างเป็นตัวอย่างสำหรับ Windows `cmd.exe` (ไม่ใช่ PowerShell)
+
+## 1) รันฐานข้อมูล (PostgreSQL)
+
+ไฟล์คอนฟิกอยู่ที่รูท `docker-compose-database.yml` — เรียกใช้ด้วยคำสั่งใดคำสั่งหนึ่งต่อไปนี้:
+
+```cmd
+docker compose -f docker-compose-database.yml up -d
+```
+
+หรือ (ถ้าระบบของคุณใช้ชื่อไบนารี `docker-compose` แบบเก่า):
+
+```cmd
+docker-compose -f docker-compose-database.yml up -d
+```
+
+หยุดและลบคอนเทนเนอร์เมื่อเสร็จ:
+
+```cmd
+docker compose -f docker-compose-database.yml down
+```
+
+ค่าเริ่มต้นจากไฟล์นั้นคือ:
+- user: `inventory_management_root`
+- password: `inventory_management_password`
+- database: `inventory_management_db`
+- port: `5432` (host)
+
+ปรับค่า connection string ใน backend configuration ของคุณถ้าจำเป็น
+
+## 2) ติดตั้งและรัน Backend (NestJS)
+
+```cmd
+cd inventory-management-backend
+npm install
+
+REM เริ่มในโหมดพัฒนา (watch)
+npm run start:dev
+```
+
+พอร์ตเริ่มต้นของ backend คือ `3000` (ใน `src/main.ts` ใช้ `process.env.PORT ?? 3000`) หากต้องการเปลี่ยนพอร์ต (Windows cmd):
+
+```cmd
+set PORT=4000
+npm run start:dev
+
+REM (ถ้าต้องการคืนค่าสภาพเดิม)
+set PORT=
+```
+
+สคริปต์ที่ใช้ได้ (ในโฟลเดอร์ backend):
+- `npm run start` — รันในโหมดปกติ
+- `npm run start:dev` — รันแบบ watch
+- `npm run build` — build เป็น `dist/`
+- `npm run test` — รัน unit tests
+- `npm run test:e2e` — รัน e2e tests
+
+หมายเหตุ: หาก backend ของคุณต้องการตัวแปรเชื่อมต่อฐานข้อมูล ให้ตั้งค่า environment variables (หรือไฟล์ `.env`) ตามการตั้งค่าของแอพ (ไฟล์ `.env` ถูก ignore ไว้ใน repo)
+
+## 3) ติดตั้งและรัน Frontend (Vite + Vue)
+
+```cmd
+cd ..\inventory-management-frontend
+npm install
+npm run dev
+```
+
+ค่าเริ่มต้นของ Vite development server มักจะเป็น `http://localhost:5173` (จะขึ้นข้อความในเทอร์มินัลเมื่อเริ่ม)
+
+สคริปต์ที่ใช้ได้ (ในโฟลเดอร์ frontend):
+- `npm run dev` — รัน dev server
+- `npm run build` — สร้างไฟล์ production
+- `npm run preview` — preview build
+
+## 4) ทดสอบแบบรวดเร็ว (Quick checks)
+
+- ตรวจว่า DB container กำลังทำงาน:
+
+```cmd
+docker ps
+```
+
+- ตรวจว่า backend ฟังที่พอร์ตที่คาดไว้ (เช่น 3000):
+
+```cmd
+netstat -ano | findstr :3000
+```
+
+- เปิดเบราว์เซอร์ที่ `http://localhost:5173` เพื่อตรวจดู frontend และเรียก API จาก UI
+
+## 5) ปัญหาที่พบบ่อย / Troubleshooting
+
+- หากติดตั้งแพ็กเกจล้มเหลว ลองลบ `node_modules` และ `package-lock.json` แล้วรัน `npm install` ใหม่
+- ถ้าทำงานบน Windows แล้ว environment variable ไม่ถูกอ่าน ลองตั้งค่าแบบถาวรใน System Environment หรือใช้ PowerShell / WSL ตามความเหมาะสม
+- ถ้า e2e tests ต้องการ DB ที่ว่าง/เฉพาะ ให้ตรวจสอบว่า schema ถูกสร้างหรือ migration รันก่อน
+
+## 6) คำแนะนำเพิ่มเติม
+
+- ถ้าต้องการรันทั้งระบบแบบอัตโนมัติ: runcmd ที่เปิด 3 terminal (DB, backend, frontend) หรือใช้ task runner ที่ชอบ
+- เพิ่มไฟล์ `.env.example` ใน backend ถ้าต้องการแชร์ตัวอย่างตัวแปร environment
+
