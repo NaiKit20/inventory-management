@@ -69,6 +69,18 @@ set PORT=
 - `npm run build` — build เป็น `dist/`
 - `npm run test` — รัน unit tests
 - `npm run test:e2e` — รัน e2e tests
+- `npm run migration:run` — รัน database migrations เพื่อเพิ่มข้อมูลเริ่มต้น
+- `npm run migration:revert` — ย้อนกลับ migration ล่าสุด
+
+### การเพิ่มข้อมูลเริ่มต้น (Initial Data Seeding)
+
+หลังจากรัน backend ครั้งแรก ให้รันคำสั่งนี้เพื่อเพิ่มข้อมูล GoodsName เริ่มต้น:
+
+```cmd
+npm run migration:run
+```
+
+คำสั่งนี้จะเพิ่มข้อมูลสินค้าตัวอย่าง 10 รายการลงในตาราง GOODS_NAME
 
 หมายเหตุ: หาก backend ของคุณต้องการตัวแปรเชื่อมต่อฐานข้อมูล ให้ตั้งค่า environment variables (หรือไฟล์ `.env`) ตามการตั้งค่าของแอพ (ไฟล์ `.env` ถูก ignore ไว้ใน repo)
 

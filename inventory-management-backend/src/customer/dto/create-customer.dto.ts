@@ -1,4 +1,4 @@
 export class CreateCustomerDto {
-    cus_id: string;
-    cus_name: string;
+  cus_id: string;
+  cus_name: string;
 }

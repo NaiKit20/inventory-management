@@ -1,4 +1,4 @@
 export class DeleteDetailOrderDto {
-    Order_no: number
-    Goods_id: string
+  Order_no: number;
+  Goods_id: string;
 }

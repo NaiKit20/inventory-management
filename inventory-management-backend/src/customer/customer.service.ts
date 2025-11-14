@@ -1,20 +1,26 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { CusName } from './entities/CUS_NAME.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { CreateCustomerDto } from "./dto/create-customer.dto";
+import { UpdateCustomerDto } from "./dto/update-customer.dto";
+import { CusName } from "./entities/CUS_NAME.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class CustomerService {
   constructor(
     @InjectRepository(CusName) private cusNameRepository: Repository<CusName>,
-  ) { }
+  ) {}
 
   async create(dto: CreateCustomerDto) {
-    const customer = await this.cusNameRepository.findOne({ where: { cus_id: dto.cus_id } });
+    const customer = await this.cusNameRepository.findOne({
+      where: { cus_id: dto.cus_id },
+    });
     if (customer) {
-      throw new ConflictException('Customer ID already exists');
+      throw new ConflictException("Customer ID already exists");
     }
 
     const newCustomer = this.cusNameRepository.create(dto);
@@ -34,9 +40,11 @@ export class CustomerService {
   }
 
   async remove(id: string) {
-    const customer = await this.cusNameRepository.findOne({ where: { cus_id: id } });
+    const customer = await this.cusNameRepository.findOne({
+      where: { cus_id: id },
+    });
     if (!customer) {
-      throw new NotFoundException('Customer not found');
+      throw new NotFoundException("Customer not found");
     }
     return this.cusNameRepository.remove(customer);
   }
